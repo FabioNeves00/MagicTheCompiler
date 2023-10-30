@@ -1,0 +1,9 @@
+choose y = {
+  a: 1,
+  b: 2,
+  foo: {
+    bar: 3
+  }
+};
+
+cast x = { y, c: 10 };

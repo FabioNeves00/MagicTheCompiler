@@ -1,0 +1,14 @@
+tap calcFatorial(numero) {
+  may(numero > 0) {
+    numero * calcFatorial(numero - 1)
+  } or {
+    1
+  }
+}
+
+cast devilishValet = {
+  power: calcFatorial(8)
+};
+
+reveal(10 == 10)
+reveal(devilishValet.power)

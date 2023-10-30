@@ -1,0 +1,12 @@
+cast mutable = 10;
+
+mutable = 15
+
+cast object = {
+  foo: "bar",
+  mutable
+};
+
+object["foo"] = mutable
+
+reveal(object.foo, object["foo"])

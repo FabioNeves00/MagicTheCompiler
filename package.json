@@ -1,0 +1,28 @@
+{
+  "name": "magic-the-compiler",
+  "module": "src/compile.ts",
+  "devDependencies": {
+    "@types/inquirer": "^9.0.3",
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "start": "bun run src/compile.ts",
+    "terminal": "bun run src/terminal.ts",
+    "test:lexer": "bun run test/lexer/index.ts",
+    "test:parser": "bun run test/parser/index.ts",
+    "test:interpreter": "bun run test/interpreter/index.ts",
+    "test:variables": "bun run test/variables/index.ts",
+    "test:objects": "bun run test/objects/index.ts",
+    "test:user-functions": "bun run test/user-defined-functions/index.ts",
+    "test:keywords": "bun run test/keywords/index.ts",
+    "test:functions": "bun run test/native-functions/index.ts"
+  },
+  "type": "module",
+  "dependencies": {
+    "@inquirer/editor": "^1.2.12",
+    "inquirer": "^9.2.11"
+  }
+}

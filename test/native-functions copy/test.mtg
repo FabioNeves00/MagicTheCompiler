@@ -1,0 +1,6 @@
+cast i = 10;
+
+draw i
+reveal(i)
+discard i
+reveal(i)
