@@ -1,14 +1,17 @@
 tap calcFatorial(numero) {
-  may(numero > 0) {
-    numero * calcFatorial(numero - 1)
+  may(numero > 0) {// if else
+    numero * calcFatorial(numero - 1) // recursividade
   } or {
-    1
+    1 // retorna o valor no fim da função
   }
 }
 
+cast numberOfCreatures = 6;
+
 cast devilishValet = {
-  power: calcFatorial(8)
+  power: calcFatorial(numberOfCreatures)
 };
 
-reveal(10 == 10)
-reveal(devilishValet.power)
+//reveal(10)
+reveal(devilishValet)
+reveal("poder do devilish vallet:", devilishValet.power)
