@@ -100,6 +100,16 @@ export class Parser {
     }
   }
 
+  /**
+    * Parse if statement with the following syntax
+    ```
+    may (condition) {
+      // body
+    } [or {
+      // else body
+    }]
+    ```
+   */
   parseIfStatement(): StatementType {
     this.eat(); // eat the may token
     this.expect(
@@ -144,6 +154,14 @@ export class Parser {
     return ifStatement;
   }
 
+  /**
+    * Parse for loop with the following syntax
+    ```
+    storm (initial; condition; increment) {
+      // body
+    }
+    ```
+   */
   private parseForLoop(): StatementType {
     this.eat(); // eat the control token
     this.expect(
@@ -183,6 +201,14 @@ export class Parser {
     } as ForStatementType;
   }
 
+  /**
+    * Parse while loop with the following syntax
+    ```
+    control (condition) {
+      // body
+    }
+    ```
+   */
   private parseWhileLoop(): StatementType {
     this.eat(); // eat the control token
     this.expect(
@@ -210,6 +236,24 @@ export class Parser {
     } as WhileStatementType;
   }
 
+  /**
+    * Parse function declaration with the following syntax
+    ```
+    tap functionName(...args) {
+      // body
+    }
+    ```
+    To return a value from the function, only needs to end its implementation with a literal or variable
+    ```
+    tap functionName(...args) {
+      "Hello World"
+    }
+
+    tap functionName(...args) {
+      choose x = "Hello World";
+      x
+    ```
+   */
   parseFunctionDeclaration(): StatementType {
     this.eat(); // eat the tap token
     const name = this.expect(
@@ -255,6 +299,20 @@ export class Parser {
     return body;
   }
 
+  /**
+    * Parse variable declaration with the following syntax
+    ```
+    cast variableName = value;
+    ```
+    or
+    ```
+    choose variableName = value;
+    ```
+    or
+    ```
+    cast variableName;
+    ```
+   */
   parseVariableDeclaration(): StatementType {
     const isConstant = this.nextToken.type == TokenTypes.choose;
     const identifier = this.expect(
@@ -303,6 +361,12 @@ export class Parser {
     return this.parseAssignment();
   }
 
+  /**
+    * Parse assignment expression with the following syntax
+    ```
+    variableName = value;
+    ```
+   */
   parseAssignment(): ExpressionType {
     const left = this.parseObject(); // switch this out with objectExpr
 
@@ -373,6 +437,17 @@ export class Parser {
     } as ObjectLiteralType;
   }
 
+  /**
+    * Parse condition expression with the following syntax
+    ```
+    value < value
+    value > value
+    value <= value
+    value >= value
+    value == value
+    value != value
+    ```
+   */
   parseCondition(): ExpressionType {
     let left = this.parseAddition();
 
@@ -390,7 +465,13 @@ export class Parser {
     return left;
   }
 
-  // Handle Addition & Subtraction Operations
+  /**
+    * Parse addition expression with the following syntax
+    ```
+    value + value
+    value - value
+    ```
+   */
   parseAddition(): ExpressionType {
     let left = this.parseMultiplication();
 
@@ -419,7 +500,13 @@ export class Parser {
     return left;
   }
 
-  // Handle Multiplication and Division Operations
+  /**
+    * Parse multiplication expression with the following syntax
+    ```
+    value * value
+    value / value
+    ```
+   */
   private parseMultiplication(): ExpressionType {
     let left = this.parseCallMember();
 
@@ -437,6 +524,12 @@ export class Parser {
     return left;
   }
 
+  /**
+    * Parse call expression with the following syntax
+    ```
+    functionName(...args)
+    ```
+   */
   parseCallMember(): ExpressionType {
     const member = this.parseMember();
 
@@ -534,7 +627,7 @@ export class Parser {
   // Member
   // PrimaryExpr
 
-  // Parse Literal Values & Grouping Expressions
+  // Handle simple expression types
   private parsePrimaryExpression(): ExpressionType {
     // Determine which token we are currently at and return literal value
     
@@ -558,7 +651,7 @@ export class Parser {
           value: this.nextToken.value,
         } as StringLiteralType;
       // Grouping Expressions
-      case TokenTypes["("]: {
+      case TokenTypes["("]:
         this.nextToken; // eat the opening paren
         const value = this.parseExpression();
         this.expect(
@@ -566,8 +659,19 @@ export class Parser {
           "Unexpected token found inside parenthesised expression. Expected closing parenthesis."
         ); // closing paren
         return value;
-      }
       // Unidentified Tokens and Invalid Code Reached
+      case TokenTypes["+="]: 
+      case TokenTypes["-="]:
+        this.eat()
+        return {
+          kind: "BinaryExpression",
+          left: {
+            kind: "Identifier",
+            symbol: this.nextToken.value,
+          } as IdentifierType,
+          right: this.parseExpression(),
+          operator: this.token.value,
+        } as BinaryExpressionType;
       default:
         throw new Error(
           `Unexpected token found during parsing! ${JSON.stringify(this.token)}`
