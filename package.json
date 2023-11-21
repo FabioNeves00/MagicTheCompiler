@@ -1,6 +1,7 @@
 {
   "name": "magic-the-compiler",
   "module": "src/compile.ts",
+  "description": "compilador typescript utilizando Recusividade e LookAhead",
   "devDependencies": {
     "@types/inquirer": "^9.0.3",
     "bun-types": "latest"
