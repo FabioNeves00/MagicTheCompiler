@@ -55,7 +55,6 @@ export const NativeTypes = {
   function: "function",
   identifier: "identifier",
   eof: "eof",
-  array: "array",
 } as const;
 
 export type TokenType =
