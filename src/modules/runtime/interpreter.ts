@@ -78,8 +78,6 @@ function evaluateBinaryExpression(
       case "<":
         return makeBoolean(left.value < right.value);
       case "==":
-        console.log();
-      
         return makeBoolean(left.value === right.value);
       case "!=":
         return makeBoolean(left.value !== right.value);
@@ -137,27 +135,42 @@ export function evaluateAssignment(
   env: Environment
 ): RuntimeValue {
   console.log(assignment);
-  if(assignment.assigne.kind !== "Identifier" && assignment.assigne.kind !== "MemberExpression") {
+  if (
+    assignment.assigne.kind !== "Identifier" &&
+    assignment.assigne.kind !== "MemberExpression"
+  ) {
     console.error("Cannot assign to non-identifier");
     process.exit(1);
   }
   const value = evaluateStatement(assignment.value as ExpressionType, env);
   //@ts-ignore
-  if(assignment.assigne.kind === "MemberExpression") {
+  if (assignment.assigne.kind === "MemberExpression") {
     console.log(assignment.assigne);
-    
-    const object = evaluateStatement((assignment.assigne as MemberExpressionType).object, env) as ObjectValue;
-    const property = (assignment.assigne as MemberExpressionType).property as IdentifierType | StringLiteralType;
+
+    const object = evaluateStatement(
+      (assignment.assigne as MemberExpressionType).object,
+      env
+    ) as ObjectValue;
+    const property = (assignment.assigne as MemberExpressionType).property as
+      | IdentifierType
+      | StringLiteralType;
     if (property.kind === "Identifier") {
-      object.properties.set(property.symbol, evaluateStatement(assignment.value as ExpressionType, env));
+      object.properties.set(
+        property.symbol,
+        evaluateStatement(assignment.value as ExpressionType, env)
+      );
     }
     if (property.kind === "StringLiteral") {
-      object.properties.set(property.value, evaluateStatement(assignment.value as ExpressionType, env));
+      object.properties.set(
+        property.value,
+        evaluateStatement(assignment.value as ExpressionType, env)
+      );
     }
     return env.assignVariable(
-      ((assignment.assigne as MemberExpressionType).object as IdentifierType).symbol,
+      ((assignment.assigne as MemberExpressionType).object as IdentifierType)
+        .symbol,
       object
-    )
+    );
   }
   return env.assignVariable(
     (assignment.assigne as IdentifierType).symbol,

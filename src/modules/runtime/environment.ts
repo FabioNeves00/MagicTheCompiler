@@ -18,8 +18,8 @@ import {
 } from "@app/macros";
 
 /**
-  * Creates a global environment with the native functions.
-  * @returns The global environment.
+ * Creates a global environment with the native functions.
+ * @returns The global environment.
  */
 export function createGlobalEnvironment() {
   const env = new Environment();
@@ -33,10 +33,21 @@ export function createGlobalEnvironment() {
       args.forEach((arg: RuntimeValue) => {
         switch (arg.type) {
           case "object":
-            console.log(JSON.stringify((arg as ObjectValue)));
-          break;
-          case "number":
+            const props = (arg as ObjectValue & { value: ObjectLiteralType })
+              .properties;
+            const keys = props.keys();
+            const object: any = {};
+            for (const key of keys) {
+              object[key] = (
+                props.get(key) as RuntimeValue & { value: any }
+              ).value;
+            }
+            console.log(object);
+            break;
           case "string":
+            console.log(`"${(arg as RuntimeValue & { value: any }).value}"`);
+            break;
+          case "number":
           case "boolean":
           case "null":
             console.log(
@@ -112,10 +123,10 @@ export default class Environment {
   ) {}
 
   /**
-    * Defines a variable in the current environment.
-    * @param name The name of the variable.
-    * @param value The value of the variable.
-    * @param constant Whether the variable is constant.
+   * Defines a variable in the current environment.
+   * @param name The name of the variable.
+   * @param value The value of the variable.
+   * @param constant Whether the variable is constant.
    */
   public defineVariable(
     name: string,
@@ -128,18 +139,18 @@ export default class Environment {
   }
 
   /**
-    * Defines a function in the current environment.
-    * @param name The name of the function.
-    * @param value The value of the function.
+   * Defines a function in the current environment.
+   * @param name The name of the function.
+   * @param value The value of the function.
    */
   public getVariable(name: string): RuntimeValue | undefined {
     return this.variables.get(name) || this.parent?.getVariable(name);
   }
 
   /**
-    * Defines a function in the current environment.
-    * @param name The name of the function.
-    * @param value The value of the function.
+   * Defines a function in the current environment.
+   * @param name The name of the function.
+   * @param value The value of the function.
    */
   public assignVariable(name: string, value: RuntimeValue): RuntimeValue {
     if (this.constants.has(name)) {
@@ -162,9 +173,9 @@ export default class Environment {
   }
 
   /**
-    * Defines a function in the current environment.
-    * @param name The name of the function.
-    * @param value The value of the function.
+   * Defines a function in the current environment.
+   * @param name The name of the function.
+   * @param value The value of the function.
    */
   public deassignVariable(name: string): RuntimeValue {
     if (this.constants.has(name)) {
@@ -187,9 +198,9 @@ export default class Environment {
   }
 
   /**
-    * Defines a function in the current environment.
-    * @param name The name of the function.
-    * @param value The value of the function.
+   * Defines a function in the current environment.
+   * @param name The name of the function.
+   * @param value The value of the function.
    */
   public resolveVariable(name: string): Environment {
     if (this.variables.has(name)) {
@@ -205,9 +216,9 @@ export default class Environment {
   }
 
   /**
-    * Defines a function in the current environment.
-    * @param name The name of the function.
-    * @param value The value of the function.
+   * Defines a function in the current environment.
+   * @param name The name of the function.
+   * @param value The value of the function.
    */
   public lookupVariable(name: string): RuntimeValue {
     return this.resolveVariable(name).getVariable(name)!;

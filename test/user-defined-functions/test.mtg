@@ -12,6 +12,6 @@ cast devilishValet = {
   power: calcFatorial(numberOfCreatures)
 };
 
-//reveal(10)
+//reveal("10")
 reveal(devilishValet)
 reveal("poder do devilish vallet:", devilishValet.power)

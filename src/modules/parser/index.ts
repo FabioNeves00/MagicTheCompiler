@@ -105,9 +105,9 @@ export class Parser {
     ```
     may (condition) {
       // body
-    } [or {
+    } or {
       // else body
-    }]
+    }
     ```
    */
   parseIfStatement(): StatementType {
@@ -630,7 +630,7 @@ export class Parser {
   // Handle simple expression types
   private parsePrimaryExpression(): ExpressionType {
     // Determine which token we are currently at and return literal value
-    
+
     switch (this.token.type) {
       // User defined values.
       case TokenTypes.identifier:
@@ -660,9 +660,9 @@ export class Parser {
         ); // closing paren
         return value;
       // Unidentified Tokens and Invalid Code Reached
-      case TokenTypes["+="]: 
+      case TokenTypes["+="]:
       case TokenTypes["-="]:
-        this.eat()
+        this.eat();
         return {
           kind: "BinaryExpression",
           left: {
