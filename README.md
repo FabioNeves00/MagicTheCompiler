@@ -18,6 +18,14 @@ This project was created using `bun init` in bun v1.0.1. [Bun](https://bun.sh) i
 
 The Magic The Compiler supports the following syntax:
 
+### Comments
+
+To declare comments, use `//` at any point, jumping a line ends the comment.
+```
+// This is an example
+reveal("Hello World")
+```
+
 ### Variables
 
 To declare a variable, use the `cast` for a mutable variable and `choose` for a immutable variable keyword followed by the variable name and an optional initial value
